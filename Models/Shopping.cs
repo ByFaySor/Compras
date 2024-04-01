@@ -1,25 +1,33 @@
-/* using System.ComponentModel.DataAnnotations; */
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Compra.Models;
 
-public class Shopping
+[Index(nameof(Name))]
+public class Shopping : BaseEntity
 {
-    /* [Key] */
-    public long Id { get; set; }
+    [Required]
+    [MinLength(2), MaxLength(20)]
+    public required string Name { get; set; }
 
-    /* [Required]
-    [StringLength(maximumLength:120)] */
-    public string? Name { get; set; }
+    [Required]
+    [Column(TypeName = "decimal(19,4)")]
+    public required decimal Price { get; set; }
 }
 
 public class ShoppingDTO
 {
-    /* [Key] */
+    [Key]
     public long Id { get; set; }
 
-    /* [Required]
-    [StringLength(maximumLength: 120)] */
-    public string? Name { get; set; }
+    [Required]
+    [MinLength(2), MaxLength(20)]
+    public required string Name { get; set; }
+
+    [Required]
+    [Column(TypeName = "decimal(19,4)")]
+    public required decimal Price { get; set; }
 }
 
 /* public class ShoppingCreateRequestDTO

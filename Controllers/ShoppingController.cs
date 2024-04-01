@@ -41,7 +41,8 @@ public class ShoppingController : ControllerBase
     {
         var shopping = new Shopping
         {
-            Name = shoppingDTO.Name
+            Name = shoppingDTO.Name,
+            Price = shoppingDTO.Price,
         };
 
         _context.Shoppings.Add(shopping);
@@ -65,6 +66,7 @@ public class ShoppingController : ControllerBase
         }
 
         shoppingItem.Name = shoppingDTO.Name;
+        shoppingItem.Price = shoppingDTO.Price;
 
         try
         {
@@ -98,7 +100,8 @@ public class ShoppingController : ControllerBase
        new ShoppingDTO
        {
            Id = shopping.Id,
-           Name = shopping.Name
+           Name = shopping.Name,
+           Price = shopping.Price
        };
 
     private bool ShoppingExists(long id)

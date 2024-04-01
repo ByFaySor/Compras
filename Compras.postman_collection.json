@@ -1,0 +1,189 @@
+{
+	"info": {
+		"_postman_id": "aa21696e-5b7f-4574-a8c0-33d33dbeaa12",
+		"name": "Compras",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9507000"
+	},
+	"item": [
+		{
+			"name": "Shopping",
+			"item": [
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/shopping",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"shopping"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get One",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/shopping/:id",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"shopping",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{SHOPPING_ID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", () => {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set('SHOPPING_ID', jsonData.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Name\": \"Test 1\",\n    \"Price\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/shopping",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"shopping"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Name\": \"Test 2 edit\",\n    \"Price\": 260\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/shopping/:id",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"shopping",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{SHOPPING_ID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", () => {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/shopping/:id",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"shopping",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{SHOPPING_ID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
