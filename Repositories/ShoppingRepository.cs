@@ -1,7 +1,8 @@
-using Compra.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Compra.Repositories;
+using Compras.Models;
+
+namespace Compras.Repositories;
 
 public class ShoppingRepository :  GenericRepository<Shopping, long>, IShoppingRepository
 {

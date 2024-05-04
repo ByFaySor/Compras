@@ -1,13 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 
-using Compra.Models;
-using Compra.Repositories;
+using Compras.Models;
+using Compras.Repositories;
+using Compras.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
 
+// Database connection
 Console.WriteLine(builder.Configuration.GetConnectionString("DefaultConnection"));
 builder.Services.AddDbContext<AppDbContext>(
     options =>
@@ -16,7 +18,10 @@ builder.Services.AddDbContext<AppDbContext>(
     }
 );
 
+// Repositories
 builder.Services.AddScoped<IShoppingRepository, ShoppingRepository>();
+// Services
+builder.Services.AddScoped<ShoppingService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Compra.Models;
+namespace Compras.Models;
 
 [Index(nameof(Name))]
 public class Shopping : BaseEntity<long>

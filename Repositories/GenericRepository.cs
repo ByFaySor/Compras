@@ -1,9 +1,9 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 
-using Compra.Models;
+using Compras.Models;
 
-namespace Compra.Repositories;
+namespace Compras.Repositories;
 
 public abstract class GenericRepository<T, TId> : IGenericRepository<T, TId>
     where T : BaseEntity<TId>
@@ -31,7 +31,6 @@ public abstract class GenericRepository<T, TId> : IGenericRepository<T, TId>
 
     public async Task Update(T entity)
     {
-        /* _dbSet.Update(entity); */
         await _context.SaveChangesAsync();
     }
 
@@ -39,8 +38,6 @@ public abstract class GenericRepository<T, TId> : IGenericRepository<T, TId>
     {
         _dbSet.Remove(entity);
         await _context.SaveChangesAsync();
-
-        /* return true; */
     }
 
     public bool Any(Expression<Func<T, bool>> anyExpression)

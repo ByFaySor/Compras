@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace Compra.Models;
+namespace Compras.Models;
 
 public class AppDbContext : DbContext
 {

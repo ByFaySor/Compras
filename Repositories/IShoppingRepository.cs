@@ -1,6 +1,6 @@
-using Compra.Models;
+using Compras.Models;
 
-namespace Compra.Repositories;
+namespace Compras.Repositories;
 
 public interface IShoppingRepository : IGenericRepository<Shopping, long>
 {

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Compra.Models;
+namespace Compras.Models;
 
 public abstract class BaseEntity<TId>
 {

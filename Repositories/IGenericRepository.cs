@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace Compra.Repositories;
+namespace Compras.Repositories;
 
 public interface IGenericRepository<T, TId>
 {
