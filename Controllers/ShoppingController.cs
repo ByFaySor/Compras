@@ -1,34 +1,34 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-using Compra.Models;
-using Compra.Repositories;
+using Compras.Models;
+using Compras.Services;
 
-namespace Compra.AddControllers;
+namespace Compras.AddControllers;
 
 [Route("api/[controller]")]
 [ApiController]
 public class ShoppingController : ControllerBase
 {
-    private readonly IShoppingRepository _repository;
+    private readonly ShoppingService _service;
 
-    public ShoppingController(IShoppingRepository repository)
+    public ShoppingController(ShoppingService service)
     {
-        _repository = repository;
+        _service = service;
     }
 
     [HttpGet]
-    public async Task<IEnumerable<Shopping>> ListShopping()
+    public async Task<IEnumerable<Shopping>> GetAll()
     {
-        return await _repository.GetAll();
+        return await _service.GetAll();
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<ShoppingDTO>> GetShopping(long id)
+    public async Task<ActionResult<ShoppingDTO>> GetById(long id)
     {
-        var shopping = await _repository.GetById(id);
+        var shopping = await _service.GetById(id);
 
-        if (shopping == null)
+        if (shopping is null)
         {
             return NotFound();
         }
@@ -37,15 +37,9 @@ public class ShoppingController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<ShoppingDTO>> PostShopping(ShoppingDTO shoppingDTO)
+    public async Task<ActionResult<ShoppingDTO>> create(ShoppingDTO shoppingDTO)
     {
-        var shopping = new Shopping
-        {
-            Name = shoppingDTO.Name,
-            Price = shoppingDTO.Price,
-        };
-
-        shopping = await _repository.Insert(shopping);
+        var shopping = await _service.Create(shoppingDTO);
 
         return ShoppingToDTO(shopping);
     }
@@ -53,19 +47,19 @@ public class ShoppingController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> PutShopping(long id, ShoppingDTO shoppingDTO)
     {
-        var shoppingItem = await _repository.GetById(id);
-
-        if (shoppingItem == null)
+        if (id != shoppingDTO.Id)
         {
-            return NotFound();
+            return BadRequest();
         }
-
-        shoppingItem.Name = shoppingDTO.Name;
-        shoppingItem.Price = shoppingDTO.Price;
 
         try
         {
-            await _repository.Update(shoppingItem);
+            var shopping = await _service.Update(id, shoppingDTO);
+
+            if (shopping is null)
+            {
+                return NotFound();
+            }
         }
         catch (DbUpdateConcurrencyException) when (!ShoppingExists(id))
         {
@@ -78,14 +72,12 @@ public class ShoppingController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteShopping(long id)
     {
-        var shopping = await _repository.GetById(id);
+        var shopping = await _service.Delete(id);
 
-        if (shopping == null)
+        if (shopping is null)
         {
             return NotFound();
         }
-
-        await _repository.Delete(shopping);
 
         return NoContent();
     }
@@ -100,8 +92,5 @@ public class ShoppingController : ControllerBase
         };
     }
 
-    private bool ShoppingExists(long id)
-    {
-        return _repository.Any(e => e.Id == id);
-    }
+    private bool ShoppingExists(long id) => _service.Any(id);
 }
