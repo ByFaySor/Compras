@@ -2,10 +2,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Compra.Models;
 
-public abstract class BaseEntity
+public abstract class BaseEntity<TId>
 {
     [Key]
-    public long Id { get; set; }
+    public TId? Id { get; set; }
     public DateTime? CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
 }

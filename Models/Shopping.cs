@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Compra.Models;
 
 [Index(nameof(Name))]
-public class Shopping : BaseEntity
+public class Shopping : BaseEntity<long>
 {
     [Required]
     [MinLength(2), MaxLength(20)]

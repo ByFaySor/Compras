@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Compra.Models;
 using Microsoft.EntityFrameworkCore;
+
+using Compra.Models;
+using Compra.Repositories;
 
 namespace Compra.AddControllers;
 
@@ -8,25 +10,23 @@ namespace Compra.AddControllers;
 [ApiController]
 public class ShoppingController : ControllerBase
 {
-    public readonly AppDbContext _context;
+    private readonly IShoppingRepository _repository;
 
-    public ShoppingController(AppDbContext context)
+    public ShoppingController(IShoppingRepository repository)
     {
-        _context = context;
+        _repository = repository;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ShoppingDTO>>> ListShopping()
+    public async Task<IEnumerable<Shopping>> ListShopping()
     {
-        return await _context.Shoppings
-            .Select(shopping => ShoppingToDTO(shopping))
-            .ToListAsync();
+        return await _repository.GetAll();
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<ShoppingDTO>> GetShopping(long id)
     {
-        var shopping = await _context.Shoppings.FindAsync(id);
+        var shopping = await _repository.GetById(id);
 
         if (shopping == null)
         {
@@ -45,20 +45,15 @@ public class ShoppingController : ControllerBase
             Price = shoppingDTO.Price,
         };
 
-        _context.Shoppings.Add(shopping);
-        await _context.SaveChangesAsync();
+        shopping = await _repository.Insert(shopping);
 
-        return CreatedAtAction(
-            nameof(GetShopping),
-            new { id = shopping.Id },
-            ShoppingToDTO(shopping)
-        );
+        return ShoppingToDTO(shopping);
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> PutShopping(long id, ShoppingDTO shoppingDTO)
     {
-        var shoppingItem = await _context.Shoppings.FindAsync(id);
+        var shoppingItem = await _repository.GetById(id);
 
         if (shoppingItem == null)
         {
@@ -70,7 +65,7 @@ public class ShoppingController : ControllerBase
 
         try
         {
-            await _context.SaveChangesAsync();
+            await _repository.Update(shoppingItem);
         }
         catch (DbUpdateConcurrencyException) when (!ShoppingExists(id))
         {
@@ -83,29 +78,30 @@ public class ShoppingController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteShopping(long id)
     {
-        var shopping = await _context.Shoppings.FindAsync(id);
+        var shopping = await _repository.GetById(id);
 
         if (shopping == null)
         {
             return NotFound();
         }
 
-        _context.Shoppings.Remove(shopping);
-        await _context.SaveChangesAsync();
+        await _repository.Delete(shopping);
 
         return NoContent();
     }
 
-    private static ShoppingDTO ShoppingToDTO(Shopping shopping) =>
-       new ShoppingDTO
-       {
-           Id = shopping.Id,
-           Name = shopping.Name,
-           Price = shopping.Price
-       };
+    private static ShoppingDTO ShoppingToDTO(Shopping shopping)
+    {
+        return new ShoppingDTO
+        {
+            Id = shopping.Id,
+            Name = shopping.Name,
+            Price = shopping.Price
+        };
+    }
 
     private bool ShoppingExists(long id)
     {
-        return _context.Shoppings.Any(e => e.Id == id);
+        return _repository.Any(e => e.Id == id);
     }
 }
