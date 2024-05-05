@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 
-using Compras.Models;
 using Compras.Services;
 using Compras.Models.DTOs;
 
