@@ -1,6 +1,7 @@
 namespace Compras.Services;
 
 using Compras.Models;
+using Compras.Models.DTOs;
 using Compras.Repositories;
 
 public class ShoppingService
@@ -19,7 +20,7 @@ public class ShoppingService
 
     public async Task<Shopping?> GetById(long id) => await _repository.GetById(id);
 
-    public async Task<Shopping> Create(ShoppingDTO entity)
+    public async Task<Shopping> Create(ShoppingCreateRequest entity)
     {
         var createEntity = new Shopping
         {
@@ -30,7 +31,7 @@ public class ShoppingService
         return await _repository.Insert(createEntity);
     }
 
-    public async Task<Shopping?> Update(long id, ShoppingDTO entity)
+    public async Task<Shopping?> Update(long id, ShoppingUpdateRequest entity)
     {
         var oldEntity = await _repository.GetById(id);
 

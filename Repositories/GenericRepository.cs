@@ -19,7 +19,7 @@ public abstract class GenericRepository<T, TId> : IGenericRepository<T, TId>
 
     public async Task<T> Insert(T entity)
     {
-        _dbSet.Add(entity);
+        await _dbSet.AddAsync(entity);
         await _context.SaveChangesAsync();
 
         return entity;
@@ -31,6 +31,7 @@ public abstract class GenericRepository<T, TId> : IGenericRepository<T, TId>
 
     public async Task Update(T entity)
     {
+        _dbSet.Update(entity);
         await _context.SaveChangesAsync();
     }
 

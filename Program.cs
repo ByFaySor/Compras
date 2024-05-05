@@ -22,6 +22,8 @@ builder.Services.AddDbContext<AppDbContext>(
 builder.Services.AddScoped<IShoppingRepository, ShoppingRepository>();
 // Services
 builder.Services.AddScoped<ShoppingService>();
+// Automapper
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

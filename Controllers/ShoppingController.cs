@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 using Compras.Models;
 using Compras.Services;
+using Compras.Models.DTOs;
 
 namespace Compras.AddControllers;
 
@@ -11,20 +13,24 @@ namespace Compras.AddControllers;
 public class ShoppingController : ControllerBase
 {
     private readonly ShoppingService _service;
+    private readonly IMapper _mapper;
 
-    public ShoppingController(ShoppingService service)
+    public ShoppingController(ShoppingService service, IMapper mapper)
     {
         _service = service;
+        _mapper = mapper;
     }
 
     [HttpGet]
-    public async Task<IEnumerable<Shopping>> GetAll()
+    public async Task<IEnumerable<ShoppingGetResponse>> GetAll()
     {
-        return await _service.GetAll();
+        var shoppings = await _service.GetAll();
+
+        return _mapper.Map<IEnumerable<ShoppingGetResponse>>(shoppings);
     }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<ShoppingDTO>> GetById(long id)
+    [HttpGet("{id:long}")]
+    public async Task<ActionResult<ShoppingGetResponse>> GetById(long id)
     {
         var shopping = await _service.GetById(id);
 
@@ -33,28 +39,30 @@ public class ShoppingController : ControllerBase
             return NotFound();
         }
 
-        return ShoppingToDTO(shopping);
+        return _mapper.Map<ShoppingGetResponse>(shopping);
     }
 
     [HttpPost]
-    public async Task<ActionResult<ShoppingDTO>> create(ShoppingDTO shoppingDTO)
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    public async Task<ActionResult<ShoppingCreateResponse>> create(ShoppingCreateRequest payload)
     {
-        var shopping = await _service.Create(shoppingDTO);
+        var shopping = await _service.Create(payload);
 
-        return ShoppingToDTO(shopping);
+        return CreatedAtAction(
+            nameof(GetById),
+            new { id = shopping.Id },
+            new {
+                Id = shopping.Id
+            }
+        );
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> PutShopping(long id, ShoppingDTO shoppingDTO)
+    [HttpPut("{id:long}")]
+    public async Task<IActionResult> PutShopping(long id, ShoppingUpdateRequest payload)
     {
-        if (id != shoppingDTO.Id)
-        {
-            return BadRequest();
-        }
-
         try
         {
-            var shopping = await _service.Update(id, shoppingDTO);
+            var shopping = await _service.Update(id, payload);
 
             if (shopping is null)
             {
@@ -69,7 +77,7 @@ public class ShoppingController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:long}")]
     public async Task<IActionResult> DeleteShopping(long id)
     {
         var shopping = await _service.Delete(id);
@@ -80,16 +88,6 @@ public class ShoppingController : ControllerBase
         }
 
         return NoContent();
-    }
-
-    private static ShoppingDTO ShoppingToDTO(Shopping shopping)
-    {
-        return new ShoppingDTO
-        {
-            Id = shopping.Id,
-            Name = shopping.Name,
-            Price = shopping.Price
-        };
     }
 
     private bool ShoppingExists(long id) => _service.Any(id);
