@@ -4,6 +4,7 @@ using AutoMapper;
 
 using Compras.Services;
 using Compras.Models.DTOs;
+using Compras.Shared.Pagination;
 
 namespace Compras.AddControllers;
 
@@ -21,11 +22,9 @@ public class ShoppingController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IEnumerable<ShoppingGetResponse>> GetAll()
+    public async Task<PaginationResponseModel<ShoppingGetResponse>> GetAll([FromQuery] PaginationRequestModel request)
     {
-        var shoppings = await _service.GetAll();
-
-        return _mapper.Map<IEnumerable<ShoppingGetResponse>>(shoppings);
+        return await _service.GetAll(request);
     }
 
     [HttpGet("{id:long}")]

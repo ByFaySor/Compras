@@ -3,6 +3,7 @@ namespace Compras.Services;
 using Compras.Models;
 using Compras.Models.DTOs;
 using Compras.Repositories;
+using Compras.Shared.Pagination;
 
 public class ShoppingService
 {
@@ -13,9 +14,9 @@ public class ShoppingService
         _repository = repository;
     }
 
-    public async Task<IEnumerable<Shopping>> GetAll()
+    public async Task<PaginationResponseModel<ShoppingGetResponse>> GetAll(PaginationRequestModel request)
     {
-        return await _repository.GetAll();
+        return await _repository.GetAll(request);
     }
 
     public async Task<Shopping?> GetById(long id) => await _repository.GetById(id);
