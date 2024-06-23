@@ -4,18 +4,45 @@ namespace Compras.Shared.Pagination;
 
 public class PaginationModel
 {
-    [Required]
-    [Range(1, Int32.MaxValue)]
-    public int Page { get; set; }
+    const int maxPageSize = 50;
 
     [Required]
     [Range(1, Int32.MaxValue)]
-    public int Limit { get; set; }
+    public int Page { get; set; } = 1;
+
+    private int _pageSize = 10;
+
+    [Required]
+    [Range(1, Int32.MaxValue)]
+    public int Limit {
+        get
+        {
+            return _pageSize;
+        }
+        set
+        {
+            _pageSize = (value > maxPageSize) ? maxPageSize : value;
+        }
+    }
+}
+
+public enum OrderBy
+{
+    Asc,
+    Desc
+}
+
+public class SortModel
+{
+    public OrderBy? Id { get; set; }
+    public OrderBy? Name { get; set; }
+    public OrderBy? Price { get; set; }
 }
 
 public class PaginationRequestModel
 {
     public required PaginationModel Pagination { get; set; }
+    public SortModel? Sort { get; set; }
 }
 
 public class PaginationResponseModel<T>

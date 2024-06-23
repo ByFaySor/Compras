@@ -31,6 +31,21 @@
 								{
 									"key": "Pagination.Limit",
 									"value": "2"
+								},
+								{
+									"key": "Sort.Id",
+									"value": "ASC",
+									"disabled": true
+								},
+								{
+									"key": "Sort.Name",
+									"value": "DESC",
+									"disabled": true
+								},
+								{
+									"key": "Sort.Price",
+									"value": "DESC",
+									"disabled": true
 								}
 							]
 						}
