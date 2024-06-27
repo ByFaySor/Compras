@@ -15,7 +15,7 @@ public class ShoppingRepository :  GenericRepository<Shopping, long>, IShoppingR
 
     public async Task<PaginationResponseModel<ShoppingGetResponse>> GetAll(PaginationRequestModel request)
     {
-        var count = await _dbSet.CountAsync();
+        int count = await _dbSet.CountAsync();
 
         // TODO: validar que el request.Pagination.Offset no supere el totalPages
         // TODO: pasar este método al generic
@@ -25,14 +25,54 @@ public class ShoppingRepository :  GenericRepository<Shopping, long>, IShoppingR
                 Name = shopping.Name,
                 Price = shopping.Price,
             });
-        
+
+        // Filter
+        if (request.Filter is not null)
+        {
+            if (request.Filter.Id is not null)
+            {
+                db = db.Where(shopping => shopping.Id == request.Filter.Id);
+            }
+
+            if (request.Filter.Name is not null)
+            {
+                db = db.Where(shopping => shopping.Name == request.Filter.Name);
+            }
+
+            if (request.Filter.Price is not null)
+            {
+                db = db.Where(shopping => shopping.Price == request.Filter.Price);
+            }
+
+            if (request.Filter.PriceLessThan is not null)
+            {
+                db = db.Where(shopping => shopping.Price > request.Filter.PriceLessThan);
+            }
+
+            if (request.Filter.PriceGreaterThan is not null)
+            {
+                db = db.Where(shopping => shopping.Price < request.Filter.PriceGreaterThan);
+            }
+
+            // Filter search
+            if (request.Filter.Search is not null)
+            {
+                db = db.Where(
+                    shopping =>
+                        shopping.Id.ToString().Contains(request.Filter.Search) ||
+                        shopping.Name.Contains(request.Filter.Search) ||
+                        shopping.Price.ToString().Contains(request.Filter.Search)
+                );
+            }
+        }
+
         // Sort
         string orderByDefault = "Id";
         string orderBy = orderByDefault;
 
         if (request.Sort is not null)
         {
-            var sortColumns = new Dictionary<string, OrderBy?>
+            Dictionary<string, OrderBy?> sortColumns = new Dictionary<string, OrderBy?>
             {
                 { "Id", request.Sort.Id },
                 { "Name", request.Sort.Name },
@@ -41,7 +81,7 @@ public class ShoppingRepository :  GenericRepository<Shopping, long>, IShoppingR
 
             foreach (KeyValuePair<string, OrderBy?> sortColumn in sortColumns.Where(sortColumn => sortColumn.Value is not null))
             {
-                var orderByColumn = $"{sortColumn.Key} {sortColumn.Value}";
+                string orderByColumn = $"{sortColumn.Key} {sortColumn.Value}";
 
                 if (orderBy == orderByDefault)
                 {

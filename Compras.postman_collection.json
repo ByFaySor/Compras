@@ -15,7 +15,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{URL}}/api/shopping?Pagination.Page=1&Pagination.Limit=2",
+							"raw": "{{URL}}/api/shopping?Pagination.Page=1&Pagination.Limit=10&Filter.Search=test 2",
 							"host": [
 								"{{URL}}"
 							],
@@ -30,7 +30,7 @@
 								},
 								{
 									"key": "Pagination.Limit",
-									"value": "2"
+									"value": "10"
 								},
 								{
 									"key": "Sort.Id",
@@ -46,6 +46,35 @@
 									"key": "Sort.Price",
 									"value": "DESC",
 									"disabled": true
+								},
+								{
+									"key": "Filter.Id",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "Filter.Name",
+									"value": "Test 4",
+									"disabled": true
+								},
+								{
+									"key": "Filter.Price",
+									"value": "300",
+									"disabled": true
+								},
+								{
+									"key": "Filter.PriceLessThan",
+									"value": "100",
+									"disabled": true
+								},
+								{
+									"key": "Filter.PriceGreaterThan",
+									"value": "101",
+									"disabled": true
+								},
+								{
+									"key": "Filter.Search",
+									"value": "test 2"
 								}
 							]
 						}

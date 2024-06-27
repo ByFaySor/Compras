@@ -39,10 +39,21 @@ public class SortModel
     public OrderBy? Price { get; set; }
 }
 
+public class FilterModel
+{
+    public int? Id { get; set; }
+    public string? Name { get; set; }
+    public decimal? Price { get; set; }
+    public decimal? PriceLessThan { get; set; }
+    public decimal? PriceGreaterThan { get; set; }
+    public string? Search { get; set; }
+}
+
 public class PaginationRequestModel
 {
     public required PaginationModel Pagination { get; set; }
     public SortModel? Sort { get; set; }
+    public FilterModel? Filter { get; set; }
 }
 
 public class PaginationResponseModel<T>
